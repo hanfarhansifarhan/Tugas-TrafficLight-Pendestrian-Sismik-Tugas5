@@ -1,0 +1,75 @@
+// Traffic Light
+int tRed = 2;
+int tYellow = 3;
+int tGreen = 4;
+
+// Pedestrian
+int pRed = 5;
+int pGreen = 6;
+
+// Button
+int button = 7;
+
+bool requestCross = false;
+
+void setup() {
+  pinMode(tRed, OUTPUT);
+  pinMode(tYellow, OUTPUT);
+  pinMode(tGreen, OUTPUT);
+
+  pinMode(pRed, OUTPUT);
+  pinMode(pGreen, OUTPUT);
+
+  pinMode(button, INPUT_PULLUP);
+
+  // Default state
+  digitalWrite(tGreen, HIGH);
+  digitalWrite(tRed, LOW);
+  digitalWrite(tYellow, LOW);
+
+  digitalWrite(pRed, HIGH);
+  digitalWrite(pGreen, LOW);
+}
+
+void loop() {
+  // cek tombol (aktif LOW karena INPUT_PULLUP)
+  if (digitalRead(button) == LOW) {
+    requestCross = true;
+  }
+
+  if (requestCross) {
+    runPedestrianCrossing();
+    requestCross = false;
+  }
+}
+
+void runPedestrianCrossing() {
+
+  // Matikan hijau traffic
+  digitalWrite(tGreen, LOW);
+
+  // Kuning kedip 3x
+  for (int i = 0; i < 3; i++) {
+    digitalWrite(tYellow, HIGH);
+    delay(500);
+    digitalWrite(tYellow, LOW);
+    delay(500);
+  }
+
+  // Traffic merah
+  digitalWrite(tRed, HIGH);
+
+  // Pedestrian hijau
+  digitalWrite(pRed, LOW);
+  digitalWrite(pGreen, HIGH);
+
+  delay(10000); // 10 detik
+
+  // Pedestrian kembali merah
+  digitalWrite(pGreen, LOW);
+  digitalWrite(pRed, HIGH);
+
+  // Traffic kembali hijau
+  digitalWrite(tRed, LOW);
+  digitalWrite(tGreen, HIGH);
+}
